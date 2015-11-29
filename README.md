@@ -1,0 +1,46 @@
+confirmator mongopool
+=====================
+
+[![Build Status](https://travis-ci.org/hachreak/confirmator_mongopool.svg?branch=master)](https://travis-ci.org/hachreak/confirmator_mongopool)
+
+A backend implementation for the OTP library
+[confirmator](https://github.com/hachreak/confirmator).
+
+Configuration
+-------------
+
+```erlang
+[
+  {mongopool, [
+    {pools, [
+      {mypool, [
+        {size, 10},
+        {max_overflow, 30}
+      ], [
+        {database, <<"mydb">>},
+        {hostname, dbserver},
+        {login, "myuser"},
+        {password, "mypassword"},
+        {w_mode, safe}
+      ]}
+    ]}
+  ]},
+  {confirmator, [
+    {backend, confirmator_mongopool}
+  ]},
+  {confirmator_mongopool, [
+    {pool, mypool},
+    {table, mytable}
+  ]}
+]
+```
+
+Build
+-----
+
+    $ rebar3 compile
+
+Tests
+-----
+
+    $ ./utils/rebar3 eunit

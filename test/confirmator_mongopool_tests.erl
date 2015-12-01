@@ -27,6 +27,8 @@ confirmator_mongopool_test_() ->
         fun start/0,
         fun stop/1,
         [
+             fun generate_ok_auto_test/1,
+             fun generate_wrong_token_auto_test/1,
              fun generate_ok_test/1,
              fun generate_wrong_token_test/1
             ]
@@ -49,18 +51,39 @@ start() ->
                                      ]}
                       ]),
   application:set_env(confirmator, backend, confirmator_mongopool),
-  confirmator_mongopool:start(testpool, test_confirmation_backend).
+  {ok, AppCtx} = confirmator_mongopool:start(
+                   testpool, test_confirmation_backend),
+  AppCtx.
 
 stop(_State) ->
     ok.
 
+generate_ok_auto_test(AppCtx) ->
+  fun() ->
+      Id = <<"test-generate-ok-id">>,
+
+      {ok, {Token, NewAppCtx}} = confirmator:register(Id, AppCtx),
+      ?assertEqual({true, AppCtx}, confirmator:confirm(Id, Token, NewAppCtx))
+  end.
+
+generate_wrong_token_auto_test(AppCtx) ->
+  fun() ->
+      Id = <<"test-generate-wrong-token-id">>,
+
+      {ok, {Token, AppCtx}} = confirmator:register(Id, AppCtx),
+      WrongToken = << Token/binary, <<"test-wrong-token">>/binary >>,
+      ?assertEqual({false, AppCtx},
+                   confirmator:confirm(Id, WrongToken, AppCtx)),
+      ?assertEqual({false, AppCtx}, confirmator:confirm(Id, Token, AppCtx))
+
+  end.
 generate_ok_test(AppCtx) ->
   fun() ->
       Id = <<"test-generate-ok-id">>,
       Token = <<"test-generate-ok-token">>,
 
-      {ok, NewAppCtx} = confirmator:register(Id, Token, AppCtx),
-      ?assertEqual({true, AppCtx}, confirmator:confirm(Id, Token, NewAppCtx))
+      {ok, {Token, AppCtx}} = confirmator:register(Id, Token, AppCtx),
+      ?assertEqual({true, AppCtx}, confirmator:confirm(Id, Token, AppCtx))
   end.
 
 generate_wrong_token_test(AppCtx) ->
@@ -69,9 +92,8 @@ generate_wrong_token_test(AppCtx) ->
       Token = <<"test-generate-wrong-token-token">>,
       WrongToken = <<"test-wrong-token">>,
 
-      {ok, NewAppCtx} = confirmator:register(Id, Token, AppCtx),
+      {ok, {Token, AppCtx}} = confirmator:register(Id, Token, AppCtx),
       ?assertEqual({false, AppCtx},
-                   confirmator:confirm(Id, WrongToken, NewAppCtx)),
-      ?assertEqual({false, AppCtx}, confirmator:confirm(Id, Token, NewAppCtx))
-
+                   confirmator:confirm(Id, WrongToken, AppCtx)),
+      ?assertEqual({false, AppCtx}, confirmator:confirm(Id, Token, AppCtx))
   end.

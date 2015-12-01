@@ -35,6 +35,12 @@ Configuration
 ]
 ```
 
+Usage
+-----
+
+To know how it works, see
+[confirmator](https://github.com/hachreak/confirmator) documentation.
+
 Build
 -----
 

@@ -38,7 +38,7 @@ start() ->
 
 start(Pool, Table) ->
   application:ensure_all_started(mongopool),
-  #{pool => Pool, table => Table}.
+  {ok, #{pool => Pool, table => Table}}.
 
 stop(_AppCtx) ->
   ok.

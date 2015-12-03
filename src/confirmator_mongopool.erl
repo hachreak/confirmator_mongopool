@@ -21,9 +21,10 @@
 -module('confirmator_mongopool').
 
 -behaviour(confirmator_backend).
+-behaviour(application).
 
 % My API
--export([start/0, start/2, stop/1]).
+-export([start/2, init/0, init/2, stop/1]).
 
 % Behaviour API
 - export([register/3, confirm/3]).
@@ -31,14 +32,23 @@
 
 %%% My API Implementation.
 
-start() ->
+-spec start(application:start_type(), term()) ->
+  {ok, confirmator:appctx()} | {error, term()}.
+start(_StartType, _StartArgs) ->
+  ok.
+
+-spec init() ->  {ok, confirmator:appctx()} | {error, term()}.
+init() ->
   {ok, Pool} = application:get_env(confirmator_mongopool, pool),
   {ok, Table} = application:get_env(confirmator_mongopool, table),
-  start(Pool, Table).
+  init(Pool, Table).
 
-start(Pool, Table) ->
+-spec init(binary(), binary()) ->
+  {ok, confirmator:appctx()} | {error, term()}.
+init(Pool, Table) ->
   {ok, #{pool => Pool, table => Table}}.
 
+-spec stop(confirmator:appctx()) -> ok.
 stop(_AppCtx) ->
   ok.
 

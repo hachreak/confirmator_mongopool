@@ -51,8 +51,9 @@ start() ->
                                      ]}
                       ]),
   application:set_env(confirmator, backend, confirmator_mongopool),
-  {ok, AppCtx} = confirmator_mongopool:start(
-                   testpool, test_confirmation_backend),
+  application:ensure_all_started(confirmator_mongopool),
+  {ok, AppCtx} = confirmator_mongopool:init(
+                   testpool, test_confirmation_table),
   AppCtx.
 
 stop(_State) ->

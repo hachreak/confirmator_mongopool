@@ -46,7 +46,7 @@ start() ->
                                    {max_overflow, 30}
                                   ], [
                                       {database, <<"pippo">>},
-                                      {hostname, <<"127.0.0.1">>},
+                                      {host, "127.0.0.1"},
                                       {w_mode, safe}
                                      ]}
                       ]),

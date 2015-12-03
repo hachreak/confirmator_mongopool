@@ -32,8 +32,8 @@
 %%% My API Implementation.
 
 start() ->
-  Pool = application:get_env(confirmator_mongopool, pool),
-  Table = application:get_env(confirmator_mongopool, table),
+  {ok, Pool} = application:get_env(confirmator_mongopool, pool),
+  {ok, Table} = application:get_env(confirmator_mongopool, table),
   start(Pool, Table).
 
 start(Pool, Table) ->

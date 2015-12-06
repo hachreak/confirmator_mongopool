@@ -38,7 +38,16 @@ Configuration
 Usage
 -----
 
-To know how it works, see
+Configure `confirmator` to use this `backend`.
+
+Start the plugin:
+
+```erlang
+application:ensure_all_started(confirmator_mongopool).
+{ok, AppCtx} = confirmator_mongopool:init(mypool, mytable).
+```
+
+To know how to use it, see directly the
 [confirmator](https://github.com/hachreak/confirmator) documentation.
 
 Build

@@ -33,7 +33,7 @@
 %%% My API Implementation.
 
 -spec start(application:start_type(), term()) ->
-  {ok, confirmator:appctx()} | {error, term()}.
+  ok | {error, term()}.
 start(_StartType, _StartArgs) ->
   ok.
 

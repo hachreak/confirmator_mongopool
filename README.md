@@ -44,6 +44,13 @@ Start the plugin:
 
 ```erlang
 application:ensure_all_started(confirmator_mongopool).
+{ok, AppCtx} = confirmator:init().
+```
+
+Or, if want initialize manually the plugin:
+
+```erlang
+application:ensure_all_started(confirmator_mongopool).
 {ok, AppCtx} = confirmator_mongopool:init(mypool, mytable).
 ```
 

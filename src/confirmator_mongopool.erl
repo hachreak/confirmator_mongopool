@@ -79,7 +79,7 @@ confirm(Id, Token, AppCtx = #{pool := Pool, table := Table}) ->
               #{<<"_id">> := Id,
                 <<"token">> := Token} -> true;
               #{<<"_id">> := Id, <<"token">> := _WrongToken} -> false;
-              #{} -> false
+              _Rest -> false
             end,
   % clear the token before exit
   mongopool_app:delete(Pool, Table, #{<<"_id">> => Id}),
